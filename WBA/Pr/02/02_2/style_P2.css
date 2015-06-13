@@ -1,0 +1,32 @@
+section#bild{
+    float:right;
+    padding-right: 20px;
+}
+section#bild img{
+    width:100px;
+    height:100px;
+}
+header#page_header{
+   width:100%
+}
+header#page_header{
+    float:left;
+    text-align: center;
+}
+section#sidebar{
+    float:left;
+    width:15%;    
+    //padding-left: 20px;
+    display:block
+}
+section#content{
+    //clear:both;
+    width:84%;
+    padding-left: 200px;
+}
+section#content span{
+    font-weight: bold;
+}
+section#sidebar ul li a:visited{
+color:#FF00FF;
+}

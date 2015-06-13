@@ -1,0 +1,18 @@
+Frage 1:
+1. aufruf des tools avr-g++
+2. aufruf der kompilierten dateien ( mit .o endung)
+3. aufruf von avr-gcc
+4. wieder aufruf der kompilierten dateien ( mit .elf endung)
+5. aufruf von avr-objcopy
+6. ausgabe datei mit .eep endung
+7. aufruf von avr-objcopy
+8. ausgabe datei mit .hex endung
+
+Frage 2:
+-avr5.x
+-wir benutzen nur den Flash speicher
+
+Frage 3:
+Es ist intern so realisiert, sodass Programme möglichst einfach und klein gehalten werden.
+Setup initialisiert die benötigten Pins und loop führt das programm mehrmals aus, da das System neu bootet(?)
+

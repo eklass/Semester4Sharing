@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+Das Projekt muss ein Java-Web Projekt sein, damit er die .jsp's auch ausfuehrt!
+-->
+<html>
+    <head>
+        <title>Ajax mit jQuery</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>
+            function ajaxRequest(script) {
+                $.get(script, function appendToSite(data){
+                    $("body").append("<blockquote style='border: 2px solid blue'>"+data+"</blockquote>");
+                    $("body").append("<br>")
+                });
+            }
+            
+        </script>
+    </head>
+    <body>
+        <h1>Ajax mit jQuery</h1>
+        <button type="button" onclick="ajaxRequest('check_ip.jsp');">IP-Check</button>
+        <button type="button" onclick="ajaxRequest('check_date.jsp');">aktuelles Datum</button>
+        <button type="button" onclick="ajaxRequest('check_host.jsp');">Host-Check</button>
+        <br>
+        <button type="button" onclick="ajaxRequest('check_language.jsp');">Language-Check</button>
+        <button type="button" onclick="ajaxRequest('check_mime.jsp');">Mime-Check</button>
+        <button type="button" onclick="ajaxRequest('check_userAgent.jsp');">User-Agent</button>
+        <br>
+    </body>
+</html>

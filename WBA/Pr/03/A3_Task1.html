@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ueberschrift</title>
+        <script type="text/javascript">
+            function viewNavigator() {
+                document.write("<h1>Eigenschaften des navigator-Objekts</h1>");
+                for(property in navigator){
+                    var buff = navigator[property];
+                    document.write(property+":"+buff+"<br>");
+                }
+            }
+        </script>
+    </head>
+    <body onload="viewNavigator()">
+        <h2>Eigenschaften des navigator-Objekts</h2>
+    </body>
+</html>

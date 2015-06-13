@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <script>
+        document.write("<h3> Schiffe versenken</h3>");
+        
+        function schiffausgeben (schiffchen) {
+            for (var i in schiffchen){
+                document.write("<b>"+i+"</b>: "+schiffchen[i]+"<br>");
+            }
+            document.write("<br>");
+        }
+
+        function tiefenveraenderung(schiff,wert) {
+            if(wert>=0 || wert<0) {
+            schiff.Tiefe=schiff.Tiefe+wert;
+            document.write(schiff.Schiffsname+"=>Tiefenver&auml;nderung: "+wert+" Meter -> Neue Tiefe: "+schiff.Tiefe+" Meter<br>");    
+            }
+            
+        }
+        //Objektdefinition Person
+        var Person1 = new Object();
+        Person1.name = "K&auml;ptn Blaub&auml;r, m&auml;nnlich";
+        
+        var Person2 = new Object();
+        Person2.name = "Richard Wagner, m&auml;nnlich";
+        
+        var Schiff1 = new Object();
+        Schiff1.Schiffsname = "Elvira";
+        Schiff1.Schiffsmodell = "Segler";
+        Schiff1.Kapitaen = Person1.name;
+        Schiff1.Nationalitaet = "B&auml;rig";
+        Schiff1.Tiefe = 0;
+        
+        var Schiff2 = {
+            Schiffsname : "Fliegender Holl&auml;nder",
+            Schifsmodell : "Gruselschiff",
+            Kapitaen : Person2.name,
+            Nationalitaet : "Deutsch",
+            Tiefe : 0
+        }
+        
+        //Schiff1 ausgeben
+        schiffausgeben(Schiff1);
+//        //Schiff 2 ausgeben
+        schiffausgeben(Schiff2);
+        
+        document.write("<h3> Beide Schiffe sind auf hoher See</h3>");
+        tiefenveraenderung(Schiff1,50);
+        tiefenveraenderung(Schiff2,1000);
+        tiefenveraenderung(Schiff1,200);
+        tiefenveraenderung(Schiff2,-500);
+        tiefenveraenderung(Schiff1,-100);
+        tiefenveraenderung(Schiff1,-150);
+        tiefenveraenderung(Schiff2,400);
+        tiefenveraenderung(Schiff2, -1000);
+
+        
+    </script>
+    
+    <body>
+    </body>
+</html>

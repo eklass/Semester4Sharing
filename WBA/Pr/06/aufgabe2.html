@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>RSS-Reader</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>
+            function loadRSS() {
+                $("body").append("<ul>");
+                url = 'http://www.spiegel.de/schlagzeilen/tops/index.rss';
+                $.ajax({
+                    type: "GET",
+                    url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(url),
+                    dataType: 'json',
+                    error: function () {
+                        alert('Unable to load feed, Incorrect path or invalid feed');
+                    },
+                    success: function (xml) {
+                        values = xml.responseData.feed.entries;
+                        for(i=0;i<values.length;i++){
+                            $("body").append("<li><a href='"+values[i].link+"'>"+values[i].title+"</a></li><br>");
+                        }
+                    }
+                });
+                $("body").append("</ul><br>Quelle: <u>SPIEGEL ONLINE</u><br>");
+            }
+        </script>
+    </head>
+    <body onload="loadRSS();">
+
+    </body>
+</html>

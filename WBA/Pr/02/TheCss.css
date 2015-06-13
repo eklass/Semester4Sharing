@@ -1,0 +1,31 @@
+/*24px=h1;	22px=h2; ...*/
+header#Kopf {
+	font-size:22px;
+	font-weight:bolder;
+
+}
+
+header#article_headlines {
+	font-weight:bolder;
+}
+
+body {
+}
+
+/*Float laesst Text und Bild in einernander fliessen*/
+/*clear beendet umfließen anderer Elemente*/
+/*margin definiert einen Abstand*/
+/*padding ... Innenabstand*/
+/*display ... Legt fest, wie ein Element angezeigt werden soll: z.B. Inline, Block, etc.*/
+
+section#logo {
+float:right;
+}
+
+section#left_menu {
+width:25%;
+}
+
+section#center {
+
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ueberschrift</title>
+        <script type="text/javascript">
+            function viewSettings() {
+                document.write("<h1>Anpassungen an Browsereinstellungen</h1>");
+                //for(property in navigator){
+                //    var buff = navigator[property];
+                //    document.write(property+":"+buff+"<br>");
+                //}
+                document.write("<b>appName: </b>"+navigator.appName+"<br><br>");
+                document.write("<b>appVersion: </b>"+navigator.appVersion+"<br><br>");
+                document.write("<b>userLanguage: </b>"+navigator.language+"<br><br>");
+                if((navigator.language=="de") || (navigator.language=="en")){
+                    alert("Hallo, Sie nutzen "+navigator.appName+" mit der Version "+navigator.appVersion+" und die Sprache "+navigator.language);
+                }
+                else {
+                    alert("Unknown Language");
+                }
+            }
+        </script>
+    </head>
+    <body onload="viewSettings()">
+    </body>
+</html>

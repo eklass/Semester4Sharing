@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            window.onload = function() {
+                function traverse(var node){
+                    alert("in der Fkt");
+                    while(node.hasChildNodes){
+                        if(node.textContent!=null) {
+                        node.innerHTML=node.textContent;
+                        }
+                        traverse(node.nextSibling);
+                    }
+                }
+                
+                
+            var Ausgabe=document.documentElement.childNodes[2].nodeName+"\n";
+                var i=0;
+                while(document.body.childNodes[i]!=null){
+//                    document.body.childNodes[i].innerHTML="etwas";
+//                    Ausgabe=Ausgabe+document.body.childNodes[i].nodeName+"-> "+document.body.childNodes[i]+"\n";
+                    Ausgabe+="BodyNodeName: "+document.body.childNodes[i].nodeName+", BodyNodeValue: "+document.body.childNodes[i].textContent+"\n";
+                    
+//                    alert(document.body.childNodes[i].nextSibling.textContent);
+                        
+                    document.body.childNodes[i].innerHTML=document.body.childNodes[i].nodeName+"\n";
+                    if (document.body.childNodes[i].textContent!=null) {
+//                        alert(i);
+                        document.body.childNodes[i].appendChild(neuerNode);
+                    }
+                    i++;
+            }
+//                alert(Ausgabe);
+                traverse(document.body.childNodes[2]);
+//                document.body.childNodes[1].innerHTML="etwas";
+            
+                            
+}
+        </script>
+    </head>
+    <body>
+        <h1>Hausaufgabe zu Dom</h1>
+        <p>
+            Das ist ein 
+            <strong>
+                <em>kurzes</em>
+            </strong>
+            Beispiel
+        </p>
+    </body>
+</html>
