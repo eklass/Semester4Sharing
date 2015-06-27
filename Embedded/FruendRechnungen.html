@@ -1,0 +1,119 @@
+<!--
+ "Der Computer rechnet mit allem - nur nicht mit seinem Besitzer."
+ Dieter Hildebrandt 
+-->
+
+<!--
+Changes on 26.06.2015
+	- By setting a "Lieferpacket" the frame wasn't be resetted.
+	-> Fix: .style.removeProperty('border');
+-->
+
+<!DOCTYPE html>
+    <head>
+		<meta name="viewport" content="width=device-width, initial-scale=0.85, user-scalable=yes">
+        <title>Rechnungs-Rechner</title>
+		<!-- This style disables the number input spinner-->
+		<style type="text/css">
+			input[type=number]::-webkit-outer-spin-button,
+			input[type=number]::-webkit-inner-spin-button {
+			    -webkit-appearance: none;
+		    	margin: 0;
+			}
+			input[type=number] {
+		    	-moz-appearance:textfield;
+			}
+			.redborder { border: 1px solid red; }
+		</style>
+    </head>
+<body>
+	<h2>Rechnungs-Kalkulator</h2>
+    <script type="text/javascript">
+        
+		//This style disables the number input spinner
+		function neu(){
+			document.getElementById("Feld1").value="";
+			document.getElementById("Feld2").value="";
+			document.getElementById("Feld3").value="";
+			document.getElementById("Feld4").value="";
+			document.getElementById("Feld5").value="";
+			document.getElementById("mwst").value="";
+			document.getElementById("zwischensumme").value="";
+			document.getElementById("rechnungsbetrag").value="";
+			document.getElementById("Lieferpackete").value="";			
+			document.getElementById("Lieferpackete").style.removeProperty('border');
+			document.MeinFormular.Liste.selectedIndex = 0;
+		}
+	
+		//This function will be called if someone make an input to the calculator
+        function umrechner(){
+			var modus=selectWert(document.MeinFormular.Liste);
+		// Lieferpacket-Feature without the tax
+			if (modus=="bittewaehlen"){
+				document.getElementById("Lieferpackete").value="";
+				document.getElementById("Lieferpackete").style.borderColor="#FFFFFF";
+			}
+			if (modus=="Lieferpacket1"){
+				document.getElementById("Lieferpackete").value=15.97;
+				document.getElementById("Lieferpackete").style.borderColor="#EFC049";
+			}
+			if (modus=="Lieferpacket2"){
+				document.getElementById("Lieferpackete").value=32.77;
+				document.getElementById("Lieferpackete").style.borderColor="#F061A7";
+			}			
+			if (modus=="Lieferpacket3"){
+				document.getElementById("Lieferpackete").value=49.58;
+				document.getElementById("Lieferpackete").style.borderColor="#CC99FF";
+			}
+			
+			// The || 0 is set, because the input wouldnt match if it is empty
+			var zwsumme = (parseFloat(document.getElementById("Feld1").value)|| 0)+(parseFloat(document.getElementById("Feld2").value)|| 0)+(parseFloat(document.getElementById("Feld3").value)|| 0)+(parseFloat(document.getElementById("Feld4").value)|| 0)+(parseFloat(document.getElementById("Feld5").value)|| 0)+(parseFloat(document.getElementById("Lieferpackete").value)|| 0);
+			var rbetrag=zwsumme*1.19;
+			var mwst=rbetrag-zwsumme;
+			
+			// The magic (calculation) of the programm
+			document.getElementById("zwischensumme").value=Math.round(zwsumme*100)/100;
+			document.getElementById("mwst").value=Math.round(mwst*100)/100;
+			document.getElementById("rechnungsbetrag").value=Math.round(rbetrag*100)/100;
+
+			// Is used for the mode (Lieferpacket)
+			function selectWert(sObj) {
+    			with (sObj) return options[selectedIndex].value;
+			}
+			
+		}
+    </script>
+	<!-- now the formual will be created
+		 the pattern is nessessary for matching . and ,
+		 the step is nessessary because the input type text would be failed (red)
+		 style="1px solid #ff0000" is nessesary for not changing the height from the boarder, if the border get colored
+	-->
+    <form name="MeinFormular">
+        <input type="number" id=Feld1 value="" placeholder="Bitte Betrag eingeben" onkeyup="umrechner()" pattern="[0-9]+([,\.][0-9]+)?" step="0.01"> Position 1 (ohne MWSt)<br>
+        <input type="number" id=Feld2 value="" placeholder="Bitte Betrag eingeben" onkeyup="umrechner()" pattern="[0-9]+([,\.][0-9]+)?" step="0.01"> Position 2 (ohne MWSt)<br>
+        <input type="number" id=Feld3 value="" placeholder="Bitte Betrag eingeben" onkeyup="umrechner()" pattern="[0-9]+([,\.][0-9]+)?" step="0.01"> Position 3 (ohne MWSt)<br>
+        <input type="number" id=Feld4 value="" placeholder="Bitte Betrag eingeben" onkeyup="umrechner()" pattern="[0-9]+([,\.][0-9]+)?" step="0.01"> Position 4 (ohne MWSt)<br>
+        <input type="number" id=Feld5 value="" placeholder="Bitte Betrag eingeben" onkeyup="umrechner()" pattern="[0-9]+([,\.][0-9]+)?" step="0.01"> Position 5 (ohne MWSt)<br>
+		<input type="number" id=Lieferpackete value="" onkeyup="umrechner()" onchange="umrechner()" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" style="border:20px intial #ff0000"> Lieferpacket
+		
+		<select name="Liste" onchange="umrechner()">
+			<option value="bittewaehlen">bitte w&auml;hlen</option>
+            <option value="Lieferpacket1" style="color: #EFC049;">Lieferpacket1</option>
+            <option value="Lieferpacket2" style="color: #F061A7">Lieferpacket2</option>
+            <option value="Lieferpacket3" style="color: #CC99FF">Lieferpacket3</option>
+        </select><br><br>
+		<input id="zwischensumme" type="number" name="Eingabe" readonly pattern="[0-9]+([,\.][0-9]+)?" step="0.01"> Zwischensumme (in &#8364;)<br>
+		<input id="mwst" type="number" name="Eingabe" readonly pattern="[0-9]+([,\.][0-9]+)?" step="0.01"> 19&#037;  Mwst (in &#8364;)<br>
+		<input id="rechnungsbetrag" type="number" name="Eingabe" readonly style="font-weight: bold;color: green;" pattern="[0-9]+([,\.][0-9]+)?" step="0.01">
+		Rechnungsbetrag (in &#8364;)<br><br>
+		<input type="button" value="Felder leeren" onclick="neu()">
+    </form>
+	 <font size=2>
+	  <i>"Der Computer rechnet mit allem - nur nicht mit seinem Besitzer."<br>
+	  Dieter Hildebrandt</i><br>
+	  &copy; 2015 Erich Klassen
+	 </font>
+	 
+    </body>
+	</html>
+	
