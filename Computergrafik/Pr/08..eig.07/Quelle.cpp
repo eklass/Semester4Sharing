@@ -472,6 +472,29 @@ void drawMagic(){
     }
 }
 
+void drawMagicForBezier(){
+    glRotatef(rotate_x, 1.0f, 0.0f, 0.0f);
+    glRotatef(rotate_y, 0.0f, 1.0f, 0.0f);
+    glRotatef(rotate_z, 0.0f, 0.0f, 1.0f);
+    //glBegin(GL_POLYGON);
+    
+    for (HE_face *f : faceList){
+        glBegin(GL_POLYGON);
+        HE_edge * edd = f->edge;
+        do{
+            glVertex3d(edd->vert->x*0.1*size, edd->vert->y*0.2*size, edd->vert->z*0.1*size);
+            //cout << "\nx: " << edd->vert->x << " y= " << edd->vert->y << " z= " << edd->vert->z;
+            
+            edd = edd->next;
+        } while (f->edge != edd);
+        glEnd();
+    }
+    
+    if (drawBBox){
+        drawBoundingBox();
+    }
+}
+
 void drawcircle(float size)
 {
     glBegin(GL_LINE_STRIP);
@@ -632,7 +655,8 @@ void drawCone(float xcoord, float ycoord, float zcoord, float color[3]){
     
     //###HierMussDasObjektHin###
     glColor3f(1.0, 1.0, 0.0);
-    drawMagic();
+    drawMagicForBezier();
+    //    glutSolidCone(0.05, 0.1, 20, 20);
     glPopMatrix();
 }
 
@@ -737,7 +761,6 @@ void showBezierCurve(){
     while (loopList.back().size() != 1){
         vector<vert *>   tmpVertices;
         divideCasteljauCurve(&(loopList.back()), &tmpVertices, tn);
-        
         loopList.push_back(tmpVertices);
     }
     loopList.erase(loopList.begin() + 1, loopList.begin() + loopList.size());
@@ -760,28 +783,25 @@ void display(void)
     
     if (modus==BEZIERMODEON){
         showBezierCurve();
-        if (speed < 1000){
-            tn += 1 / precision;
-        }
-        
-        // (tn>=2)....tn=-1
-        if (tn >= 1){
-            tn = 1/precision;
-            bezierPoints.erase(bezierPoints.begin(), bezierPoints.begin() + bezierPoints.size());
-        }
     }
     else if (modus==BEZIERMODEOFF)
     {
         drawSphere();
-        if (speed < 1000){
-            tn += 1 / precision;
+    }
+    
+    // tn gibt den Speed an?!?!
+    if (speed < 1000){
+        tn += 0.5 / precision;
+    }
+    
+    // (tn>=2)....tn=-1
+    if (tn >= 1){
+        while(tn>=0)
+        {
+            tn -= (1 / precision);
         }
-        
-        // (tn>=2)....tn=-1
-        if (tn >= 1){
-            tn = 1/precision;
-            bezierPoints.erase(bezierPoints.begin(), bezierPoints.begin() + bezierPoints.size());
-        }
+        //tn = 1/precision;
+        bezierPoints.erase(bezierPoints.begin(), bezierPoints.begin() + bezierPoints.size());
     }
     glutSwapBuffers();
 }
@@ -931,12 +951,13 @@ int main(int argc, char** argv)
     if (modus==BEZIERMODEOFF){
         cout<<"Beziermode ist aus!"<<endl;
         if (loadHES){
-            loadObjectFile(OBJPATH1);
+            //loadObjectFile(OBJPATH1);
             /* The Merge between bezierCurve & Sphere */
             static bool read = 0;
             if (!read){
                 readFileBezier(BEZIERPATH);
-                //loadObjectFile(OBJPATH1);
+                readFile(OBJPATH1);
+                buildHalfEdge2();
                 read = 1;
             }
             loadHES = false;
