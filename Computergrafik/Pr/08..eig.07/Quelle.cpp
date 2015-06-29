@@ -614,17 +614,26 @@ void drawCone(float xcoord, float ycoord, float zcoord, float color[3]){
     glTranslatef(xcoord, 0, 0);
     glTranslatef(0, ycoord, 0);
     glTranslatef(0, 0, zcoord);
+    double dWinkel;
     if (bezierPoints.size()){
+/* http://www.mathebibel.de/winkel-zwischen-zwei-vektoren */
+        
         vert * v = bezierPoints.back();
+        double dLaenge1 = sqrt(((xcoord * xcoord) + (ycoord * ycoord)+ (zcoord * zcoord)));
+        double dLaenge2 = sqrt(((v->x * v->x) + (v->y * v->y)+ (v->z * v->z)));
+        double dSkalar = (double)(xcoord * v->x) + (ycoord * v->y)+ (zcoord * v->z);
+        double PI = 3.14159265;
+        dWinkel = acos(dSkalar / (dLaenge1 * dLaenge2));
+        dWinkel =  dWinkel * (360.0 / (2 * PI));
+        
+        
         float entfernung = sqrt((pow((xcoord - v->x), 2) + (pow((ycoord - v->y), 2) + (pow((zcoord - v->z), 2)) )));
         float winkel = cos(entfernung / (M_PI / 2));
-        cout << "winkel: " << winkel * 180 / M_PI << endl;
+        cout << "dwinkel: " << dWinkel * 180 / M_PI << endl;
         //* 180/ M_PI
-//        glRotatef(90 + winkel * 180 / M_PI, 1, 0, 0);
+//        glRotatef(dWinkel, 1, 1, 1);
     }
-    
-    
-    glRotatef(180, 0,0,0);
+    glRotated(dWinkel, 1.0,0.0,0.0);
     //glutSolidCone(0.05, 0.2, 20, 20);
     
     //###HierMussDasObjektHin###
