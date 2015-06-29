@@ -536,37 +536,11 @@ void drawSphere(){
     /*                      draw newObejktintoSphere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!                  */
     glColor3f(0, 1, 1);
     glPushMatrix();
-    glRotatef(rotateTmp, 0, 1, 0);
-    glTranslatef(2.0f, 0, 0); // Verschiebung
+//    glRotatef(rotateTmp, 0, 1, 0);
+//    glTranslatef(2.0f, 0, 0); // Verschiebung
     if(bezierZeichnen){
         showBezierCurve();
     }
-    /* TheMagicBezierurve
-     for (vert* v : initialPoints){
-     float color[] = { 1, 0, 0 };
-     drawPoint(v->x, v->y, v->z, color, 0.04);
-     }
-     glBegin(GL_LINE_STRIP);
-     glColor3f(0, 1, 1);
-     for (vert* v : initialPoints){
-     glVertex3d(v->x, v->y, v->z);
-     }
-     glEnd();
-     while (loopList.back().size() != 1){
-     vector<vert *>   tmpVertices;
-     divideCasteljauCurve(&(loopList.back()), &tmpVertices, tn);
-     
-     loopList.push_back(tmpVertices);
-     }
-     loopList.erase(loopList.begin() + 1, loopList.begin() + loopList.size());
-     
-     glBegin(GL_LINE_STRIP);
-     glColor3f(1, 1, 0);
-     for (vert *v : bezierPoints){
-     glVertex3d(v->x, v->y, v->z);
-     }
-     glEnd();
-     */
     glPopMatrix();
     
     rotateTmp += SPEED;
@@ -646,7 +620,7 @@ void drawCone(float xcoord, float ycoord, float zcoord, float color[3]){
         float winkel = cos(entfernung / (M_PI / 2));
         cout << "winkel: " << winkel * 180 / M_PI << endl;
         //* 180/ M_PI
-        glRotatef(90 + winkel * 180 / M_PI, 1, 0, 0);
+//        glRotatef(90 + winkel * 180 / M_PI, 1, 0, 0);
     }
     
     
@@ -796,11 +770,7 @@ void display(void)
     
     // (tn>=2)....tn=-1
     if (tn >= 1){
-        while(tn>=0)
-        {
-            tn -= (1 / precision);
-        }
-        //tn = 1/precision;
+        tn = 1/precision;
         bezierPoints.erase(bezierPoints.begin(), bezierPoints.begin() + bezierPoints.size());
     }
     glutSwapBuffers();
