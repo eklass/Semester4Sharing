@@ -70,6 +70,7 @@ bool drawZwischen = 1;
 struct HE_edge;
 struct HE_vert;
 struct HE_face;
+struct HE_norm;
 vector<string> split(string str, char delimiter);
 
 
@@ -78,10 +79,11 @@ struct VERT_LIST{
     float x;
     float y;
     float z;
-    
+    HE_norm *norm;
 };
 struct FACE_LIST{
     vector<int> vertices;
+    int normIndex;
 };
 vector<VERT_LIST*> vertList_HEAD;
 vector<FACE_LIST*> faceList_HEAD;
@@ -103,6 +105,13 @@ struct HE_vert {
     float y;
     float z;
     HE_edge *edge;// one of the half-edges emanating from the vertex
+    HE_norm *norm;
+};
+
+struct HE_norm {
+    float x;
+    float y;
+    float z;
 };
 
 struct HE_face {
@@ -112,6 +121,8 @@ struct HE_face {
 vector<HE_edge*> edgeList;
 vector<HE_vert*> vertexList;
 vector<HE_face*> faceList;
+vector<HE_norm*> normList;
+
 
 //Parse the file Input and fill two lists with vertices and faces for futher processing:
 void fillLists(string input){
@@ -132,11 +143,19 @@ void fillLists(string input){
         //add new face
         FACE_LIST *faceListTmp = new FACE_LIST;
         for (unsigned int i = 1; i < splitted.size(); i++){
+            vector<string> splitted2 = split(splitted[i], '/');
+            vertList_HEAD[stoi(splitted[i])-1]->norm=normList[stoi(splitted2[1])-1];
             faceListTmp->vertices.push_back(stoi(splitted[i]) - 1);
         }
         //append new node:
         faceList_HEAD.push_back(faceListTmp);
-        
+    }
+    else if(input[0]=='v'&&input[1]=='n') {
+        HE_norm *test = new HE_norm;
+        test->x = stof(splitted[1]);
+        test->y = stof(splitted[2]);
+        test->z = stof(splitted[3]);
+        normList.push_back(test);
     }
 }
 
@@ -188,6 +207,7 @@ void buildHalfEdge2(){ //1000x schneller, aber next wird  nicht immer gesetzt...
                 newVert->x = vertList_HEAD[F->vertices[u]]->x;
                 newVert->y = vertList_HEAD[F->vertices[u]]->y;
                 newVert->z = vertList_HEAD[F->vertices[u]]->z;
+                newVert->norm = vertList_HEAD[F->vertices[u]]->norm;
                 vertexList.push_back(newVert);
                 localEdge->vert = newVert;
             }
@@ -336,6 +356,7 @@ void testHES(){
         //durchlaufen aller kanter durch edge->pair->next->pair->next->...
         HE_edge * e = vertexList[n]->edge;
         do{
+            
             //pair konsistent?
             if (e->pair->pair != e){
                 cout << "vert: pair inkonsistent!" << n << endl;
@@ -366,6 +387,14 @@ void testHES(){
         } while (vertexList[n]->edge != e);
         
     }
+        int i=0;
+    for( HE_vert *v : vertexList){
+        i++;
+        if(v->norm == NULL){
+            cout << "norm null!! " << i << endl;
+        }
+    }
+    
     cout << "all tests done." << endl;
 }
 
@@ -536,8 +565,8 @@ void drawSphere(){
     /*                      draw newObejktintoSphere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!                  */
     glColor3f(0, 1, 1);
     glPushMatrix();
-//    glRotatef(rotateTmp, 0, 1, 0);
-//    glTranslatef(2.0f, 0, 0); // Verschiebung
+    //    glRotatef(rotateTmp, 0, 1, 0);
+    //    glTranslatef(2.0f, 0, 0); // Verschiebung
     if(bezierZeichnen){
         showBezierCurve();
     }
@@ -616,8 +645,7 @@ void drawCone(float xcoord, float ycoord, float zcoord, float color[3]){
     glTranslatef(0, 0, zcoord);
     double dWinkel;
     if (bezierPoints.size()){
-/* http://www.mathebibel.de/winkel-zwischen-zwei-vektoren */
-        
+        // http://www.mathebibel.de/winkel-zwischen-zwei-vektoren
         vert * v = bezierPoints.back();
         double dLaenge1 = sqrt(((xcoord * xcoord) + (ycoord * ycoord)+ (zcoord * zcoord)));
         double dLaenge2 = sqrt(((v->x * v->x) + (v->y * v->y)+ (v->z * v->z)));
@@ -626,13 +654,10 @@ void drawCone(float xcoord, float ycoord, float zcoord, float color[3]){
         dWinkel = acos(dSkalar / (dLaenge1 * dLaenge2));
         dWinkel =  dWinkel * (360.0 / (2 * PI));
         
-        
-        float entfernung = sqrt((pow((xcoord - v->x), 2) + (pow((ycoord - v->y), 2) + (pow((zcoord - v->z), 2)) )));
-        float winkel = cos(entfernung / (M_PI / 2));
-        cout << "dwinkel: " << dWinkel * 180 / M_PI << endl;
         //* 180/ M_PI
-//        glRotatef(dWinkel, 1, 1, 1);
+        //        glRotatef(dWinkel, 1, 1, 1);
     }
+//    cout << "dwinkel: " << dWinkel * 180 / M_PI << endl;
     glRotated(dWinkel, 1.0,0.0,0.0);
     //glutSolidCone(0.05, 0.2, 20, 20);
     
@@ -641,6 +666,7 @@ void drawCone(float xcoord, float ycoord, float zcoord, float color[3]){
     drawMagicForBezier();
     //    glutSolidCone(0.05, 0.1, 20, 20);
     glPopMatrix();
+    //Manu Ansatz http://codeshare.io/MGYi6
 }
 
 vert* getNewPoint(vert* p1, vert* p2, float division){
@@ -916,7 +942,7 @@ void loadObjectFile(string path){
     readFile(path);
     buildHalfEdge2();
     printStatistics();
-    //    testHES();
+    testHES();
     
     string tmp;
     //cin >> tmp;
@@ -937,6 +963,7 @@ int main(int argc, char** argv)
                 readFileBezier(BEZIERPATH);
                 readFile(OBJPATH1);
                 buildHalfEdge2();
+                //testHES();
                 read = 1;
             }
             loadHES = false;
